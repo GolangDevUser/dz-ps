@@ -17,9 +17,13 @@ func main() {
 			fmt.Printf("Ошибка при вводе операции: %v\n", err)
 			continue
 		}
-		numbers := askNumbers(reader) 
-		if numbers == nil {
-			continue
+		var numbers []float64
+		for {
+			numbers = askNumbers(reader)
+			if numbers != nil {
+				break
+			}
+			fmt.Println("Попробуйте ввести числа снова.")
 		}
 		executeOperation(operation, numbers)
 		fmt.Print("Хотите выполнить еше одну операцию? (y/n): ")
@@ -70,7 +74,12 @@ func askNumbers(reader *bufio.Reader) []float64 {
 func executeOperation(operation string, numbers []float64) {
 	switch operation {
 	case "AVG":
-		fmt.Printf("Среднее: %.2f\n", calculateAVG(numbers))
+		avg, ok := calculateAVG(numbers)
+		if ok {
+			fmt.Printf("Среднее: %.2f\n", avg)
+		} else {
+			fmt.Println("Ошибка: невозможно вычислить среднее для пустого списка чисел")
+		}
 	case "SUM":
 		fmt.Printf("Сумма: %.2f\n", calculateSUM(numbers))
 	case "MED":
@@ -78,12 +87,15 @@ func executeOperation(operation string, numbers []float64) {
 	}
 }
 
-func calculateAVG(numbers []float64) float64 {
+func calculateAVG(numbers []float64) (float64, bool) {
+	if (len(numbers) == 0) {
+		return 0, false
+	}
 	sum := 0.0
 	for _, num := range numbers {
 		sum += num
 	}
-	return sum / float64(len(numbers))
+	return sum / float64(len(numbers)), true
 }
 
 func calculateSUM(numbers []float64) float64 {
@@ -95,10 +107,17 @@ func calculateSUM(numbers []float64) float64 {
 }
 
 func calculateMED(numbers []float64) float64 {
-	sort.Float64s(numbers)
-	n := len(numbers)
-	if n % 2 == 1 {
-		return numbers[n/2]
+
+	if len(numbers) == 0 {
+		return 0
 	}
-	return (numbers[n / 2 - 1] + numbers[n / 2]) / 2
+	sorted := make([]float64, len(numbers))
+	copy(sorted, numbers)
+
+	sort.Float64s(sorted)
+	n := len(sorted)
+	if n%2 == 1 {
+		return sorted[n/2]
+	}
+	return (sorted[n/2-1] + sorted[n/2]) / 2
 }

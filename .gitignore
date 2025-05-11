@@ -1,6 +1,0 @@
-echo "*/calculator
-*/converter
-*/converter2
-*.exe
-*.o
-*.out" > .gitignore
