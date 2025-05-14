@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func ReadFiles(name string) ([]byte, error) {
+func ReadFile(name string) ([]byte, error) {
 	data, err := os.ReadFile(name)
 	if err != nil {
 		return nil, err
@@ -15,6 +15,7 @@ func ReadFiles(name string) ([]byte, error) {
 }
 
 func IsJSONFile(fileName string) bool {
-	extension := filepath.Ext(fileName)
-	return strings.ToLower(extension) == ".json"
+    fileName = strings.TrimSpace(fileName)
+    extension := filepath.Ext(fileName)
+    return strings.ToLower(extension) == ".json"
 }

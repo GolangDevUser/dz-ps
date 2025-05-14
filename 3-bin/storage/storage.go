@@ -6,8 +6,8 @@ import (
 	"os"
 )
 
-func SaveBin(b bin.Bin, file string) error {
-	data,err := json.Marshal(b)
+func SaveBinList(list bin.BinList, file string) error {
+	data,err := json.Marshal(list)
 	if err != nil {
 		return err
 	}

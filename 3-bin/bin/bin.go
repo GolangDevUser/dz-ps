@@ -1,6 +1,10 @@
 package bin
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type Bin struct {
 	ID 			string
@@ -10,12 +14,12 @@ type Bin struct {
 }
 
 type BinList struct {
-	Bin []Bin
+	Bins []Bin
 }
 
-func newBin(name string, private bool) Bin {
-	return Bin {
-		ID: 		time.Now().Format("20060102150405"),
+func NewBin(name string, private bool) *Bin {
+	return &Bin {
+		ID: 		uuid.New().String(),
 		Private :	private,
 		CreatedAt: 	time.Now().UTC(),
 		Name 	:	name,
