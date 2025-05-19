@@ -3,7 +3,6 @@ package main
 import (
 	"fmt" 
 	"strings"
-	"errors"
 )
 
 var exchangeRates = map[string]map[string]float64 {
@@ -87,15 +86,23 @@ func inputCurrency() (string, error) {
 }
 
 func calculate(amount int, from string, to string) (float64, error) {
-	if from == to {
-		return float64(amount), nil 
-	}
-	if rates, ok := exchangeRates[from]; ok {
-		if rate, ok := rates[to]; ok {
-			return float64(amount) * rate, nil
-		}
-	}
-	return 0,errors.New("конвертация не поддерживается")
+    if from == to {
+        return float64(amount), nil 
+    }
+    
+    // Проверяем, поддерживается ли исходная валюта
+    rates, ok := exchangeRates[from]
+    if !ok {
+        return 0, fmt.Errorf("исходная валюта '%s' не поддерживается", from)
+    }
+    
+    // Проверяем, поддерживается ли целевая валюта
+    rate, ok := rates[to]
+    if !ok {
+        return 0, fmt.Errorf("целевая валюта '%s' не поддерживается", to)
+    }
+    
+    return float64(amount) * rate, nil
 }
 
 func askToContinue() bool {

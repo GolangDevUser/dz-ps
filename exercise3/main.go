@@ -82,7 +82,7 @@ func inputCurrency(rates *map[string]map[string]float64) (string, error) {
 		if _,exists := (*rates)[currency]; exists {
 			return currency, nil
 		}
-		fmt.Println("Неверная валюта. Попробуйте ещё раз")
+		fmt.Println("Неверная валюта, поддерживаемая валюта eur, usd, rub. Попробуйте ещё раз")
 	}
 }
 
