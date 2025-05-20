@@ -9,6 +9,12 @@ import (
 	"sort"
 )
 
+var menu = map[string]func([]float64){
+	"AVG": calculateAVG,
+	"SUM": calculateSUM,
+	"MED": calculateMED,
+}
+
 func main() {
 	reader := bufio.NewReader(os.Stdin)
 	for {
@@ -25,7 +31,7 @@ func main() {
 			}
 			fmt.Println("Попробуйте ввести числа снова.")
 		}
-		executeOperation(operation, numbers)
+		menu[operation](numbers)
 		fmt.Print("Хотите выполнить еше одну операцию? (y/n): ")
 		answer, err := reader.ReadString('\n')
 		if err != nil || strings.TrimSpace(strings.ToLower(answer)) != "y" {
@@ -71,53 +77,38 @@ func askNumbers(reader *bufio.Reader) []float64 {
 	return numbers
 }
 
-func executeOperation(operation string, numbers []float64) {
-	switch operation {
-	case "AVG":
-		avg, ok := calculateAVG(numbers)
-		if ok {
-			fmt.Printf("Среднее: %.2f\n", avg)
-		} else {
-			fmt.Println("Ошибка: невозможно вычислить среднее для пустого списка чисел")
-		}
-	case "SUM":
-		fmt.Printf("Сумма: %.2f\n", calculateSUM(numbers))
-	case "MED":
-		fmt.Printf("Медиана: %.2f\n", calculateMED(numbers))
-	}
-}
-
-func calculateAVG(numbers []float64) (float64, bool) {
+func calculateAVG(numbers []float64) {
 	if (len(numbers) == 0) {
-		return 0, false
+		fmt.Println("Ошибка: невозможно вычислить среднее для пустого списка чисел")
+		return 
 	}
 	sum := 0.0
 	for _, num := range numbers {
 		sum += num
 	}
-	return sum / float64(len(numbers)), true
+	fmt.Printf("Среднее: %.2f\n", sum/float64(len(numbers)))
 }
 
-func calculateSUM(numbers []float64) float64 {
+func calculateSUM(numbers []float64) {
 	sum := 0.0
 	for _, num := range numbers {
 		sum += num
 	}
-	return sum
+	 fmt.Printf("Сумма: %.2f\n", sum)
 }
 
-func calculateMED(numbers []float64) float64 {
-
+func calculateMED(numbers []float64) {
 	if len(numbers) == 0 {
-		return 0
+		fmt.Println("Ошибка: невозможно вычислить медиану для пустого списка чисел")
+        return
 	}
 	sorted := make([]float64, len(numbers))
 	copy(sorted, numbers)
-
 	sort.Float64s(sorted)
 	n := len(sorted)
 	if n%2 == 1 {
-		return sorted[n/2]
-	}
-	return (sorted[n/2-1] + sorted[n/2]) / 2
+        fmt.Printf("Медиана: %.2f\n", sorted[n/2])
+    } else {
+        fmt.Printf("Медиана: %.2f\n", (sorted[n/2-1]+sorted[n/2])/2)
+    }
 }
