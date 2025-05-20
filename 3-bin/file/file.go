@@ -6,16 +6,24 @@ import (
 	"os"
 )
 
-func ReadFile(name string) ([]byte, error) {
-	data, err := os.ReadFile(name)
-	if err != nil {
-		return nil, err
-	} 
-	return data, nil
+type JsonDb struct {
+	fileName string
 }
 
-func IsJSONFile(fileName string) bool {
-    fileName = strings.TrimSpace(fileName)
-    extension := filepath.Ext(fileName)
+func NewJsonDb(name string) *JsonDb {
+	return &JsonDb{fileName: name}
+}
+
+func (db *JsonDb) Read() ([]byte, error) {
+return os. ReadFile (db. fileName)
+}
+
+func (db *JsonDb) Write (data [ ]byte) error {
+return os. WriteFile (db. fileName, data, 0644)
+}
+
+func (db *JsonDb) IsJSONFile() bool {
+    db.fileName = strings.TrimSpace(db.fileName)
+    extension := filepath.Ext(db.fileName)
     return strings.ToLower(extension) == ".json"
 }

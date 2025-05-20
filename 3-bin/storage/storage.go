@@ -6,18 +6,33 @@ import (
 	"os"
 )
 
-func SaveBinList(list bin.BinList, file string) error {
+type JsonStorage struct {
+	fileName string
+}
+
+func NewJsonStorage(fileName string) *JsonStorage {
+	return &JsonStorage{fileName: fileName}
+}
+
+func(s *JsonStorage) Read() ([]byte, error) {
+	return os.ReadFile(s.fileName)
+}
+
+func(s *JsonStorage) Write(data []byte) error {
+	return os.WriteFile(s.fileName, data, 0644)
+}
+func (s *JsonStorage) SaveBinList(list bin.BinList) error {
 	data,err := json.Marshal(list)
 	if err != nil {
 		return err
 	}
-	return os.WriteFile(file, data, 0644)
+	return s.Write(data)
 }
 
-func ReadBinList(file string) (bin.BinList, error) {
+func (s *JsonStorage) ReadBinList() (bin.BinList, error) {
 	var list bin.BinList
 
-	data, err := os.ReadFile(file)
+	data, err := s.Read()
 	if err != nil {
 		return list, err
 	}
