@@ -6,6 +6,11 @@ import (
 	"github.com/google/uuid"
 )
 
+type Db interface {
+Read() ([]byte, error)
+Write([]byte) error
+}
+
 type Bin struct {
 	ID 			string
 	Private 	bool
